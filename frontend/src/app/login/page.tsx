@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
+import { authClient } from '@/lib/auth-client'; // নিশ্চিত করুন এটি সঠিক পাথে আছে
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Mail, Lock, User, ArrowRight, Check } from 'lucide-react';
+import { FcGoogle } from "react-icons/fc";
 
 const PREFERENCE_OPTIONS = [
   'casual', 'minimal', 'formal', 'boho', 'elegant', 'streetwear', 'classic', 'cotton', 'silk'
@@ -14,7 +16,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Form states
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -40,13 +41,7 @@ export default function LoginPage() {
       if (isLogin) {
         await login({ email, password });
       } else {
-        await register({
-          username,
-          email,
-          password,
-          ageGroup,
-          stylePreferences
-        });
+        await register({ username, email, password, ageGroup, stylePreferences });
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred. Please try again.');
@@ -54,180 +49,103 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard", // লগইনের পর কোথায় যাবে
+    });
+  };
+
   return (
-    <div className="flex-grow flex items-center justify-center px-4 py-16 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#131b2e] via-[#0b0f19] to-[#0b0f19]">
+    <div className="flex-grow flex items-center justify-center px-4 py-16 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#131b2e] via-[#000000] to-[#000000]">
       <div className="w-full max-w-md">
-        
-        {/* Decorative elements */}
         <div className="flex justify-center mb-6">
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-semibold uppercase tracking-wider"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-900/20 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider"
           >
-            <Sparkles className="h-4 w-4 text-cyan-accent" />
+            <Sparkles className="h-4 w-4" />
             <span>Style Advisor Access</span>
           </motion.div>
         </div>
 
-        {/* Card */}
         <motion.div 
           layout
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className="bg-card border border-border-premium rounded-2xl p-8 shadow-xl shadow-cyan-accent/5 backdrop-blur-sm"
+          transition={{ duration: 0.4 }}
+          className="bg-[#0b0f19] border border-gray-800 rounded-2xl p-8 shadow-2xl backdrop-blur-sm"
         >
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold tracking-tight text-white">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
-            </h2>
-            <p className="text-sm text-muted mt-2">
-              {isLogin ? 'Enter your details to access your stylist profile' : 'Set up your fashion profile to get AI curations'}
-            </p>
+            <h2 className="text-2xl font-bold text-white">{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+            <p className="text-sm text-gray-400 mt-2">{isLogin ? 'Access your stylist profile' : 'Set up your fashion profile'}</p>
           </div>
 
-          {error && (
-            <motion.div 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 rounded-lg bg-red-950/30 border border-red-500/30 text-red-400 text-sm"
-            >
-              {error}
-            </motion.div>
-          )}
+          {error && <div className="mb-6 p-3 rounded-lg bg-red-900/20 border border-red-500/20 text-red-400 text-xs text-center">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <AnimatePresence mode="popLayout">
-              {!isLogin && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-1.5"
-                >
-                  <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Username</label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted" />
-                    <input
-                      type="text"
-                      required={!isLogin}
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="e.g. Aurelia"
-                      className="w-full bg-[#0a0d16] border border-border-premium focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent rounded-lg py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 outline-none transition-all"
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-gray-500 uppercase">Username</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-600" />
+                  <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)} className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="Aurelia" />
+                </div>
+              </div>
+            )}
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Email Address</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-gray-500 uppercase">Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full bg-[#0a0d16] border border-border-premium focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent rounded-lg py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 outline-none transition-all"
-                />
+                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-600" />
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="you@example.com" />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Password</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-gray-500 uppercase">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted" />
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-[#0a0d16] border border-border-premium focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent rounded-lg py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 outline-none transition-all"
-                />
+                <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-600" />
+                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="••••••••" />
               </div>
             </div>
 
-            <AnimatePresence mode="popLayout">
-              {!isLogin && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-5 pt-2"
-                >
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide block">Age Group Demographic</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {(['child', 'young', 'old'] as const).map((group) => (
-                        <button
-                          key={group}
-                          type="button"
-                          onClick={() => setAgeGroup(group)}
-                          className={`py-2 rounded-lg text-xs font-bold capitalize transition-all border ${
-                            ageGroup === group 
-                              ? 'bg-cyan-accent/15 border-cyan-accent text-cyan-accent' 
-                              : 'bg-[#0a0d16] border-border-premium text-muted hover:border-gray-500 hover:text-white'
-                          }`}
-                        >
-                          {group === 'child' ? 'Child' : group === 'young' ? 'Youth' : 'Elderly'}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+            {/* AI Preferences (Only for registration) */}
+            {!isLogin && (
+              <div className="space-y-3 pt-2">
+                <label className="text-[10px] font-bold text-gray-500 uppercase">Style Preferences</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {PREFERENCE_OPTIONS.map((pref) => (
+                    <button key={pref} type="button" onClick={() => handlePrefToggle(pref)} className={`px-2 py-1 rounded-md text-[10px] capitalize border ${stylePreferences.includes(pref) ? 'bg-cyan-500/20 border-cyan-500 text-cyan-300' : 'bg-[#131b2e] border-gray-700 text-gray-500'}`}>
+                      {pref}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide block">Style Preferences</label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {PREFERENCE_OPTIONS.map((pref) => {
-                        const selected = stylePreferences.includes(pref);
-                        return (
-                          <button
-                            key={pref}
-                            type="button"
-                            onClick={() => handlePrefToggle(pref)}
-                            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium capitalize border transition-all ${
-                              selected 
-                                ? 'bg-teal-accent/15 border-teal-accent text-teal-accent' 
-                                : 'bg-[#0a0d16] border-border-premium text-muted hover:border-gray-500 hover:text-white'
-                            }`}
-                          >
-                            {selected && <Check className="h-3 w-3" />}
-                            {pref}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-accent to-teal-accent text-background py-2.5 rounded-lg font-bold tracking-wide shadow-md shadow-cyan-accent/10 hover:shadow-cyan-accent/20 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none mt-4 cursor-pointer"
-            >
-              <span>{loading ? 'Please wait...' : isLogin ? 'Access Advisor' : 'Create Profile'}</span>
-              {!loading && <ArrowRight className="h-4 w-4" />}
+            <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-2.5 rounded-lg font-bold text-sm hover:opacity-90 transition-all mt-4">
+              {loading ? 'Processing...' : isLogin ? 'Access Advisor' : 'Create Profile'}
             </button>
           </form>
 
-          {/* Toggle */}
-          <div className="text-center mt-6 pt-6 border-t border-border-premium/50">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setError('');
-              }}
-              className="text-xs font-medium text-cyan-accent hover:text-white transition-colors"
-            >
-              {isLogin ? "Don't have an account? Register Profile" : 'Already configured? Log in here'}
+          {/* Google Login with custom theme */}
+
+          <button onClick={() => setIsLogin(!isLogin)} className="text-sm font-bold mx-20 pt-2 text-gray-400 hover:text-cyan-400 transition-colors">
+              {isLogin ? "Don't have an account? Register" : 'Already have an account? Log in'}
             </button>
+
+         
+          <div className="text-center mt-3 pt-3 border-t border-gray-800">
+            
+             <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full mt-4 py-2.5 flex items-center justify-center gap-2 bg-[#131b2e] border border-gray-700 text-gray-300 rounded-lg hover:bg-[#1a253d] transition-all font-medium text-sm"
+          >
+            <FcGoogle className="h-4 w-4" /> Continue with Google
+          </button>
+
+
           </div>
         </motion.div>
       </div>
