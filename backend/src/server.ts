@@ -16,8 +16,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 // backend/src/server.ts
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001"], // আপনার ফ্রন্টএন্ডের পোর্টগুলো এখানে দিন
-  credentials: true
+  origin: process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',') : ["https://style-era-nine.vercel.app"],  credentials: true
 }));
 app.use(express.json());
 
