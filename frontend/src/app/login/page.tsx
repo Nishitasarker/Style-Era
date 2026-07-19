@@ -52,7 +52,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/dashboard", // লগইনের পর কোথায় যাবে
+      callbackURL: "/", // লগইনের পর কোথায় যাবে
     });
   };
 

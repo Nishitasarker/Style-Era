@@ -200,6 +200,15 @@ router.put('/:id', protect, async (req: AuthenticatedRequest, res: Response): Pr
   }
 });
 
+
+router.get('/my-items', protect, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const items = await Item.find({ createdBy: req.user?.id });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching your items' });
+  }
+});
 // @route   DELETE /api/items/:id
 // @desc    Delete a style item
 router.delete('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {

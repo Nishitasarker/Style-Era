@@ -39,6 +39,8 @@ export interface AIRecommendationResponse {
   reasonings: Record<string, string>;
 }
 
+// utils/api.ts এ যোগ করুন
+
 // Client fetch helper
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('style_era_token') : null;
@@ -101,6 +103,12 @@ export const api = {
   deleteItem: (id: string) => request<{ message: string }>(`/items/${id}`, {
     method: 'DELETE'
   }),
+
+  getMyItems: async () => {
+  const response = await axiosInstance.get('/api/items/my-items'); // ব্যাকএন্ডে এই রাউটটি তৈরি করতে হবে
+  return response.data;
+},
+
 
   // AI API
   getStyleAdvice: (message: string, history: any[] = []) => request<AIAdviceResponse>('/ai/advisor', {
