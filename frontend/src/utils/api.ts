@@ -6,6 +6,7 @@ export interface User {
   email: string;
   ageGroup: 'child' | 'young' | 'old';
   stylePreferences: string[];
+  avatarUrl?: string;
 }
 
 export interface Item {
