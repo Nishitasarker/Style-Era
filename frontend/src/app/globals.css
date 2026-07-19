@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0f19;
+  --foreground: #ffffff;
+  --card-bg: #151b2c;
+  --accent-cyan: #00d2ff;
+  --accent-teal: #38b2ac;
+  --text-muted: #94a3b8;
+  --border-color: #222e4a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-cyan-accent: var(--accent-cyan);
+  --color-teal-accent: var(--accent-teal);
+  --color-muted: var(--text-muted);
+  --color-border-premium: var(--border-color);
+  
+  --radius-premium: 12px;
+}
+
+/* Base Body Styles */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Navigation */
+.glass-nav {
+  background: rgba(11, 15, 25, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Premium Card Hover Glow */
+.premium-glow-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-glow-card:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #151b2c 25%, #222e4a 50%, #151b2c 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Custom Scrollbar for chat and body */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
+}
