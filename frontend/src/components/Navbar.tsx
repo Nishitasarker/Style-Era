@@ -4,16 +4,25 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../providers/AuthProvider';
+import { authClient } from '../lib/auth-client'; 
 import { Sparkles, FolderHeart, PlusCircle, LogOut, ChevronDown, User as UserIcon, LayoutDashboard, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user: authUser, logout, isAuthenticated: authIsAuthenticated } = useAuth();
+  
+  
+  const { data: session } = authClient.useSession();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  
+  const isAuthenticated = authIsAuthenticated || !!session;
+  const user = authUser || session?.user;
 
   const isActive = (path: string) => pathname === path;
 
@@ -69,8 +78,8 @@ export default function Navbar() {
             {isAuthenticated && user ? (
               <div className="relative" ref={dropdownRef}>
                 <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-2 bg-white/5 border border-border-premium px-3 py-1.5 rounded-xl hover:bg-white/10 transition-all">
-                  <img src={user.avatarUrl || `https://ui-avatars.com/api/?name=${user.username}`} alt="Avatar" className="h-7 w-7 rounded-full border border-cyan-accent/50" />
-                  <span className="text-sm font-semibold text-white hidden sm:inline">{user.username}</span>
+                  <img src={user.image || user.avatarUrl || `https://ui-avatars.com/api/?name=${user.name || user.username || 'User'}`} alt="Avatar" className="h-7 w-7 rounded-full border border-cyan-accent/50" />
+                  <span className="text-sm font-semibold text-white hidden sm:inline">{user.name || user.username}</span>
                   <ChevronDown className={`h-4 w-4 text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
 

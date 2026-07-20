@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
-import { authClient } from '@/lib/auth-client'; // নিশ্চিত করুন এটি সঠিক পাথে আছে
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Mail, Lock, User, ArrowRight, Check } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
+import { motion } from 'framer-motion';
+import { Sparkles, Mail, Lock, User } from 'lucide-react';
 import { FcGoogle } from "react-icons/fc";
 
 const PREFERENCE_OPTIONS = [
@@ -23,6 +23,14 @@ export default function LoginPage() {
   const [stylePreferences, setStylePreferences] = useState<string[]>([]);
 
   const { login, register } = useAuth();
+
+    useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setUsername('');
+    setStylePreferences([]);
+    setError('');
+  }, [isLogin]);
 
   const handlePrefToggle = (pref: string) => {
     if (stylePreferences.includes(pref)) {
@@ -52,7 +60,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/", // লগইনের পর কোথায় যাবে
+      callbackURL: "/", 
     });
   };
 
@@ -82,13 +90,13 @@ export default function LoginPage() {
 
           {error && <div className="mb-6 p-3 rounded-lg bg-red-900/20 border border-red-500/20 text-red-400 text-xs text-center">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             {!isLogin && (
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-gray-500 uppercase">Username</label>
                 <div className="relative">
                   <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-600" />
-                  <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)} className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="Aurelia" />
+                  <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="Aurelia" />
                 </div>
               </div>
             )}
@@ -97,7 +105,7 @@ export default function LoginPage() {
               <label className="text-[10px] font-bold text-gray-500 uppercase">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-600" />
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="you@example.com" />
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="off" className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="you@example.com" />
               </div>
             </div>
 
@@ -105,7 +113,7 @@ export default function LoginPage() {
               <label className="text-[10px] font-bold text-gray-500 uppercase">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-600" />
-                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="••••••••" />
+                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" className="w-full bg-[#131b2e] border border-gray-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white outline-none focus:border-cyan-500" placeholder="••••••••" />
               </div>
             </div>
 
@@ -128,24 +136,18 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Google Login with custom theme */}
-
           <button onClick={() => setIsLogin(!isLogin)} className="text-sm font-bold mx-20 pt-2 text-gray-400 hover:text-cyan-400 transition-colors">
-              {isLogin ? "Don't have an account? Register" : 'Already have an account? Log in'}
-            </button>
-
-         
-          <div className="text-center mt-3 pt-3 border-t border-gray-800">
-            
-             <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="w-full mt-4 py-2.5 flex items-center justify-center gap-2 bg-[#131b2e] border border-gray-700 text-gray-300 rounded-lg hover:bg-[#1a253d] transition-all font-medium text-sm"
-          >
-            <FcGoogle className="h-4 w-4" /> Continue with Google
+            {isLogin ? "Don't have an account? Register" : 'Already have an account? Log in'}
           </button>
 
-
+          <div className="text-center mt-3 pt-3 border-t border-gray-800">
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full mt-4 py-2.5 flex items-center justify-center gap-2 bg-[#131b2e] border border-gray-700 text-gray-300 rounded-lg hover:bg-[#1a253d] transition-all font-medium text-sm"
+            >
+              <FcGoogle className="h-4 w-4" /> Continue with Google
+            </button>
           </div>
         </motion.div>
       </div>
