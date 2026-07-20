@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../utils/api'; // আপনার API ইউটিলিটি
-import { useAuth } from '../providers/AuthProvider';
+import { api } from '../../utils/api'; // আপনার API ইউটিলিটি
+import { useAuth } from '../../providers/AuthProvider';
 import { Package, PlusCircle, LayoutDashboard, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
