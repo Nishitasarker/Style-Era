@@ -4,26 +4,38 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../providers/AuthProvider';
-import { Sparkles, FolderHeart, PlusCircle, LogOut, ChevronDown, User as UserIcon, LayoutDashboard, Settings } from 'lucide-react';
+import { Sparkles, FolderHeart, PlusCircle, LogOut, ChevronDown, User as UserIcon, LayoutDashboard, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
   const { user, logout, isAuthenticated } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => pathname === path;
 
-  // বাইরে ক্লিক করলে ড্রপডাউন বন্ধ হবে
+  // বাইরে ক্লিক করলে ড্রপডাউন ও মোবাইল মেনু বন্ধ হবে
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // পেজ চেঞ্জ হলে মোবাইল মেনু অটো বন্ধ হয়ে যাবে
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full glass-nav border-b border-border-premium/50 bg-[#050a18]/80 backdrop-blur-md">
@@ -40,7 +52,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Main Navigation (Only Essential Links) */}
+          {/* Main Navigation (Desktop Only) */}
           <nav className="hidden md:flex items-center space-x-1">
             <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${isActive('/') ? 'text-cyan-accent bg-cyan-accent/5' : 'text-gray-300 hover:text-white'}`}>Home</Link>
             <Link href="/explore" className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${isActive('/explore') ? 'text-cyan-accent bg-cyan-accent/5' : 'text-gray-300 hover:text-white'}`}>Explore Collection</Link>
@@ -52,13 +64,13 @@ export default function Navbar() {
             )}
           </nav>
 
-          {/* User Controls */}
-          <div>
+          {/* User Controls & Mobile Menu Toggle */}
+          <div className="flex items-center gap-3">
             {isAuthenticated && user ? (
               <div className="relative" ref={dropdownRef}>
                 <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-2 bg-white/5 border border-border-premium px-3 py-1.5 rounded-xl hover:bg-white/10 transition-all">
                   <img src={user.avatarUrl || `https://ui-avatars.com/api/?name=${user.username}`} alt="Avatar" className="h-7 w-7 rounded-full border border-cyan-accent/50" />
-                  <span className="text-sm font-semibold text-white">{user.username}</span>
+                  <span className="text-sm font-semibold text-white hidden sm:inline">{user.username}</span>
                   <ChevronDown className={`h-4 w-4 text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -86,9 +98,37 @@ export default function Navbar() {
                 Login / Register
               </Link>
             )}
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg bg-white/5 border border-border-premium text-gray-300 hover:text-white"
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
+
         </div>
       </div>
+
+      {/* Mobile Sidebar / Dropdown Menu */}
+      {isMobileMenuOpen && (
+        <div ref={mobileMenuRef} className="md:hidden absolute top-full left-0 w-full bg-[#050a18]/95 border-b border-border-premium backdrop-blur-xl px-4 py-5 space-y-3 shadow-2xl z-40">
+          <nav className="flex flex-col space-y-1">
+            <Link href="/" className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive('/') ? 'text-cyan-accent bg-cyan-accent/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+              Home
+            </Link>
+            <Link href="/explore" className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive('/explore') ? 'text-cyan-accent bg-cyan-accent/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+              Explore Collection
+            </Link>
+            {isAuthenticated && (
+              <Link href="/profile" className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${isActive('/profile') ? 'text-cyan-accent bg-cyan-accent/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+                <Sparkles className="h-4 w-4 text-cyan-accent" /> AI Style Advisor
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

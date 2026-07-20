@@ -1,10 +1,13 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, Mail, Shield, BookOpen, Globe } from 'lucide-react';
+import { Sparkles, Mail, Shield, Globe, MessageCircle } from 'lucide-react';
+import { FaLinkedin, FaFacebook } from 'react-icons/fa'; // সোশ্যাল আইকনগুলোর জন্য (যদি রিয়্যাক্ট আইকন ইনস্টল করা থাকে)
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#0a0d16] border-t border-premium-border mt-auto">
+    <footer className="w-full bg-[#0a0d16] border-t border-border-premium mt-auto">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Intro */}
@@ -44,21 +47,58 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal / Contact */}
+          {/* Connect & Support / Social Links */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-white tracking-wider uppercase">Connect & Support</h4>
-            <ul className="space-y-2 text-sm text-muted">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-cyan-accent" />
-                <span>support@styleera.com</span>
+            <ul className="space-y-2.5 text-sm text-muted">
+              {/* Email */}
+              <li>
+                <a 
+                  href="mailto:nishitasarkerjui@gmail.com" 
+                  className="flex items-center gap-2 hover:text-cyan-accent transition-colors"
+                >
+                  <Mail className="h-4 w-4 text-cyan-accent shrink-0" />
+                  <span>nishitasarkerjui@gmail.com</span>
+                </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-teal-accent" />
-                <span>Secure JWT Authentication</span>
+
+              {/* WhatsApp */}
+              <li>
+                <a 
+                  href="https://wa.me/8801859384536" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-cyan-accent transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4 text-teal-accent shrink-0" />
+                  <span>+880 1859-384536</span>
+                </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-cyan-accent" />
-                <span>Global Fashion Standards</span>
+
+              {/* LinkedIn */}
+              <li>
+                <a 
+                  href="https://www.linkedin.com/in/nishitasarkerjui" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-cyan-accent transition-colors"
+                >
+                  <Shield className="h-4 w-4 text-cyan-accent shrink-0" />
+                  <span>LinkedIn Profile</span>
+                </a>
+              </li>
+
+              {/* Facebook */}
+              <li>
+                <a 
+                  href="https://www.facebook.com/100080777081861/posts/962049083164319/?substory_index=1745046966465629&app=fbl" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-cyan-accent transition-colors"
+                >
+                  <Globe className="h-4 w-4 text-teal-accent shrink-0" />
+                  <span>Facebook Profile / Post</span>
+                </a>
               </li>
             </ul>
           </div>
