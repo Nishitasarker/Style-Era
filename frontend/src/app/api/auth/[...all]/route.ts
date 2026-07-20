@@ -1,5 +1,7 @@
-// app/api/auth/[...all]/route.ts
-import { auth } from "../../../../lib/auth"; // আপনার auth.ts ফাইলের পাথ অনুযায়ী এটি দিন
+import { auth } from "../../../../lib/auth"; 
 import { toNextJsHandler } from "better-auth/next-js";
 
-export const { POST, GET } = toNextJsHandler(auth);
+// নিশ্চিত করুন auth ইনিশিয়ালাইজ করার সময় baseURL যেন সঠিকভাবে পায়
+const handler = toNextJsHandler(auth);
+
+export const { POST, GET } = handler;

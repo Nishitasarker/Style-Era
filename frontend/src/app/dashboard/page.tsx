@@ -118,7 +118,7 @@ export default function DashboardPage() {
         ) : (
           <div className="divide-y divide-border-premium">
             {myItems.slice(0, 5).map((item) => (
-              <div key={item._id || item.id} className="p-4 flex items-center justify-between">
+              <div key={item._id} className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <img src={item.imageUrl} alt={item.name} className="h-12 w-12 rounded-lg object-cover border border-border-premium bg-white/5" />
                   <div>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
                     <p className="text-xs text-muted capitalize">{item.category} • ${item.price}</p>
                   </div>
                 </div>
-                <Link href={`/items/edit/${item._id || item.id}`} className="text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-border-premium text-gray-300">
+                <Link href={`/items/edit/${item._id}`} className="text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-border-premium text-gray-300">
                   Edit
                 </Link>
               </div>
