@@ -27,7 +27,8 @@ export default function ProfilePage() {
     setSuccessMessage('');
 
     try {
-      const response = await api.put('/users/profile', { username, avatarUrl });
+      // এখানে পাথ /profile দেওয়া হলো যা server.ts এর /api/profile এর সাথে মিলে যাবে
+      const response = await api.put('/profile', { username, avatarUrl });
       
       if (response.success || response) {
         setSuccessMessage('Profile updated successfully!');
