@@ -15,9 +15,7 @@ import {
   ChevronDown, 
   ChevronUp, 
   Mail, 
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight
+  CheckCircle2
 } from 'lucide-react';
 
 // Hero Slider Data
@@ -95,9 +93,6 @@ export default function HomePage() {
     queryFn: () => api.getItems(),
   });
 
-  const nextHero = () => setHeroIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-  const prevHero = () => setHeroIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-
   const toggleFaq = (index: number) => {
     setFaqOpen(faqOpen === index ? null : index);
   };
@@ -164,24 +159,6 @@ export default function HomePage() {
               </Link>
             </div>
           </motion.div>
-
-          {/* Left & Right Pagination Arrows */}
-          <div className="absolute inset-y-0 left-4 right-4 flex items-center justify-between pointer-events-none z-30">
-            <button
-              onClick={prevHero}
-              className="pointer-events-auto h-11 w-11 rounded-full bg-black/40 hover:bg-cyan-accent/20 border border-white/10 hover:border-cyan-accent/50 text-white flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
-              aria-label="Previous Slide"
-            >
-              <ChevronLeft className="h-6 w-6 text-white hover:text-cyan-accent" />
-            </button>
-            <button
-              onClick={nextHero}
-              className="pointer-events-auto h-11 w-11 rounded-full bg-black/40 hover:bg-cyan-accent/20 border border-white/10 hover:border-cyan-accent/50 text-white flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
-              aria-label="Next Slide"
-            >
-              <ChevronRight className="h-6 w-6 text-white hover:text-cyan-accent" />
-            </button>
-          </div>
 
           {/* Slider Indicators */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 flex gap-2 z-30">
