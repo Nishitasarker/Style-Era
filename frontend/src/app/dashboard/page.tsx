@@ -28,14 +28,17 @@ export default function DashboardPage() {
     </div>
   );
 
-  // ইউজার আইডি দিয়ে নিজের প্রোডাক্টগুলো ফিল্টার করে নেওয়া
-  const myItems = allItems.filter(item => item.createdBy === user?.id);
+   const myItems = allItems.filter(item => {
+    if (!user || (!user.id && !(user as any)._id)) return false;
+    if (!item.createdBy) return false; 
 
-  // ক্যাটাগরি হিসাব করা (ইউজারের আইটেমগুলোর ওপর ভিত্তি করে)
-  const uniqueCategories = Array.from(new Set(myItems.map((i) => i.category).filter(Boolean)));
+    const userId = user.id || (user as any)._id;
+    return String(item.createdBy) === String(userId);
+  });
 
-  // পাই চার্টের জন্য ক্যাটাগরি অনুযায়ী ডাটা প্রস্তুত করা (যেমন: Child-এ কয়টি, Young-এ কয়টি ইত্যাদি)
-  const categoryCountMap: Record<string, number> = {};
+    const uniqueCategories = Array.from(new Set(myItems.map((i) => i.category).filter(Boolean)));
+
+   const categoryCountMap: Record<string, number> = {};
   myItems.forEach((item) => {
     const cat = item.category ? item.category.toUpperCase() : 'OTHER';
     categoryCountMap[cat] = (categoryCountMap[cat] || 0) + 1;
@@ -50,7 +53,7 @@ export default function DashboardPage() {
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">Welcome back, {user?.username || 'User'}</h1>
+        <h1 className="text-3xl font-bold text-white">Welcome back, {user?.username || (user as any)?.name || 'User'}</h1>
         <p className="text-muted mt-1">Manage your style collection and track your contributions.</p>
       </div>
 
@@ -159,9 +162,6 @@ export default function DashboardPage() {
                       <p className="text-xs text-muted capitalize">{item.category} • ${item.price}</p>
                     </div>
                   </div>
-                  {/* <Link href={`/items/edit/${item._id}`} className="text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-border-premium text-gray-300">
-                    Edit
-                  </Link> */}
                 </div>
               ))}
             </div>

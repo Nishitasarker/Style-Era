@@ -6,26 +6,30 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, Item } from '../../../utils/api';
 import { useAuth } from '../../../providers/AuthProvider';
 import { Trash2, Edit, Plus, PackageOpen, Loader2 } from 'lucide-react';
-import EditItemModal from '../../../components/EditItemModal'; // আপনার পাথ অনুযায়ী ঠিক করে নেবেন
+import EditItemModal from '../../../components/EditItemModal'; 
 
 export default function MyProductsPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // মডাল কন্ট্রোল করার জন্য স্টেট
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItemToEdit, setSelectedItemToEdit] = useState<Item | null>(null);
 
-  // সব প্রোডাক্ট ফেচ করে লগইন করা ইউজারের প্রোডাক্ট ফিল্টার করা
-  const { data: allItems = [], isLoading } = useQuery<Item[]>({
+   const { data: allItems = [], isLoading } = useQuery<Item[]>({
     queryKey: ['exploreItems'],
     queryFn: () => api.getItems(),
   });
 
-  // ইউজারের নিজস্ব প্রোডাক্টগুলো ফিল্টার করে নেওয়া
-  const items = allItems.filter(item => item.createdBy === user?.id);
+    const items = allItems.filter(item => {
+    if (!user || (!user.id && !(user as any)._id)) return false;
+    if (!item.createdBy) return false; // ব্যাকএন্ডের ডিফল্ট প্রোডাক্টগুলোতে createdBy না থাকায় সেগুলো বাদ যাবে
 
-  // ডিলিট মিউটেশন
+    const userId = user.id || (user as any)._id;
+    return String(item.createdBy) === String(userId);
+  });
+
+ 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.deleteItem(id),
     onSuccess: () => {
