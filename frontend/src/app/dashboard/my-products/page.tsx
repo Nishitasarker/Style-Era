@@ -1,29 +1,39 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, Item } from '../../../utils/api';
-import { Trash2, Edit, Plus, PackageOpen } from 'lucide-react';
+import { useAuth } from '../../../providers/AuthProvider';
+import { Trash2, Edit, Plus, PackageOpen, Loader2 } from 'lucide-react';
+import EditItemModal from '../../../components/EditItemModal'; // আপনার পাথ অনুযায়ী ঠিক করে নেবেন
 
 export default function MyProductsPage() {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // ইউজারের নিজের প্রোডাক্ট ফেচ করার জন্য সঠিক api.getMyItems ব্যবহার করা হলো
-  const { data: items = [], isLoading } = useQuery<Item[]>({
-    queryKey: ['myItems'],
-    queryFn: () => api.getMyItems(),
+  // মডাল কন্ট্রোল করার জন্য স্টেট
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedItemToEdit, setSelectedItemToEdit] = useState<Item | null>(null);
+
+  // সব প্রোডাক্ট ফেচ করে লগইন করা ইউজারের প্রোডাক্ট ফিল্টার করা
+  const { data: allItems = [], isLoading } = useQuery<Item[]>({
+    queryKey: ['exploreItems'],
+    queryFn: () => api.getItems(),
   });
+
+  // ইউজারের নিজস্ব প্রোডাক্টগুলো ফিল্টার করে নেওয়া
+  const items = allItems.filter(item => item.createdBy === user?.id);
 
   // ডিলিট মিউটেশন
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.deleteItem(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myItems'] });
+      queryClient.invalidateQueries({ queryKey: ['exploreItems'] });
     },
     onError: (err: any) => {
       alert(err.message || 'Failed to delete item.');
-    }
+    },
   });
 
   const handleDelete = (id: string) => {
@@ -31,6 +41,19 @@ export default function MyProductsPage() {
       deleteMutation.mutate(id);
     }
   };
+
+  const handleOpenEdit = (item: Item) => {
+    setSelectedItemToEdit(item);
+    setIsEditModalOpen(true);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="h-8 w-8 text-cyan-accent animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
@@ -47,13 +70,7 @@ export default function MyProductsPage() {
         </Link>
       </div>
 
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((n) => (
-            <div key={n} className="h-20 w-full rounded-xl bg-card border border-border-premium animate-pulse" />
-          ))}
-        </div>
-      ) : items.length === 0 ? (
+      {items.length === 0 ? (
         <div className="text-center py-16 bg-card border border-dashed border-border-premium rounded-2xl space-y-4">
           <PackageOpen className="h-12 w-12 text-muted mx-auto" />
           <p className="text-muted text-sm">You haven't added any products yet.</p>
@@ -66,7 +83,7 @@ export default function MyProductsPage() {
           {items.map((item) => (
             <div key={item._id} className="p-4 flex items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <img src={item.imageUrl} alt={item.name} className="h-16 w-16 rounded-xl object-cover border border-border-premium" />
+                <img src={item.imageUrl} alt={item.name} className="h-16 w-16 rounded-xl object-cover border border-border-premium bg-white/5" />
                 <div>
                   <h3 className="font-bold text-white text-base">{item.name}</h3>
                   <div className="flex items-center gap-2 mt-1">
@@ -79,16 +96,18 @@ export default function MyProductsPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <Link
-                  href={`/items/edit/${item._id}`}
-                  className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-blue-400 border border-border-premium transition-colors"
+                {/* Edit Button - Opens Modal */}
+                <button
+                  onClick={() => handleOpenEdit(item)}
+                  className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-blue-400 border border-border-premium transition-colors cursor-pointer"
                   title="Edit Product"
                 >
                   <Edit size={16} />
-                </Link>
+                </button>
+                {/* Delete Button */}
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="p-2 bg-red-500/10 hover:bg-red-500 rounded-lg text-red-400 hover:text-white border border-red-500/20 transition-colors"
+                  className="p-2 bg-red-500/10 hover:bg-red-500 rounded-lg text-red-400 hover:text-white border border-red-500/20 transition-colors cursor-pointer"
                   title="Delete Product"
                 >
                   <Trash2 size={16} />
@@ -98,6 +117,16 @@ export default function MyProductsPage() {
           ))}
         </div>
       )}
+
+      {/* Edit Modal Component */}
+      <EditItemModal 
+        item={selectedItemToEdit}
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedItemToEdit(null);
+        }}
+      />
     </div>
   );
 }

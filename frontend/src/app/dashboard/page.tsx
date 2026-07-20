@@ -159,9 +159,9 @@ export default function DashboardPage() {
                       <p className="text-xs text-muted capitalize">{item.category} • ${item.price}</p>
                     </div>
                   </div>
-                  <Link href={`/items/edit/${item._id}`} className="text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-border-premium text-gray-300">
+                  {/* <Link href={`/items/edit/${item._id}`} className="text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-border-premium text-gray-300">
                     Edit
-                  </Link>
+                  </Link> */}
                 </div>
               ))}
             </div>
