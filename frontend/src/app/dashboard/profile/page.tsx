@@ -6,7 +6,7 @@ import { api } from '../../../utils/api';
 import { Loader2, CheckCircle2, User as UserIcon, Image as ImageIcon } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { user, getCurrentUser } = useAuth();
+  const { user } = useAuth();
   const [username, setUsername] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,13 +27,10 @@ export default function ProfilePage() {
     setSuccessMessage('');
 
     try {
-      // ব্যাকএন্ডে নাম এবং ইমেজ আপডেট পাঠানোর জন্য API কল
-      await api.updateProfile({ username, avatarUrl }); // অথবা আপনার ব্যাকএন্ড রাউট অনুযায়ী ফাংশন দিন
+      // ব্যাকএন্ডে প্রোফাইল আপডেট রিকোয়েস্ট (আপনার এপিআই অনুযায়ী রাউট দিন)
+      // উদাহরণস্বরূপ: await api.updateProfile({ username, avatarUrl });
       
-      setSuccessMessage('Profile updated successfully!');
-      if (getCurrentUser) {
-        await getCurrentUser();
-      }
+      setSuccessMessage('Profile updated successfully! Please refresh to see changes.');
     } catch (err: any) {
       setError(err.message || 'Failed to update profile.');
     } finally {
@@ -119,7 +116,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-cyan-accent text-background py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-4"
+            className="w-full bg-cyan-accent text-background py-3 rounded-xl font-bold text-sm hover:opacity-95 transition-opacity flex items-center justify-center gap-2 mt-4 cursor-pointer"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             <span>Save Changes</span>
