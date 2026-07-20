@@ -9,18 +9,15 @@ import { useAuth } from '../providers/AuthProvider';
 import { 
   Sparkles, 
   ArrowRight, 
-  Baby, 
-  UserCheck, 
-  Heart, 
-  TrendingUp, 
-  Users, 
   ShoppingBag, 
-  HelpCircle, 
+  Users, 
+  TrendingUp, 
   ChevronDown, 
   ChevronUp, 
   Mail, 
   CheckCircle2,
-  Calendar
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 // Hero Slider Data
@@ -89,7 +86,6 @@ export default function HomePage() {
   const { data: aiData, isLoading: aiLoading } = useQuery({
     queryKey: ['aiRecommendations', user?.id],
     queryFn: () => api.getSmartRecommendations(),
-    // Query runs if authenticated, or falls back to generic
     enabled: true,
   });
 
@@ -100,6 +96,7 @@ export default function HomePage() {
   });
 
   const nextHero = () => setHeroIndex((prev) => (prev + 1) % HERO_SLIDES.length);
+  const prevHero = () => setHeroIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
 
   const toggleFaq = (index: number) => {
     setFaqOpen(faqOpen === index ? null : index);
@@ -117,7 +114,7 @@ export default function HomePage() {
     <div className="w-full space-y-20 pb-20">
       
       {/* 1. HERO SECTION */}
-      <section className="relative w-full h-[600px] overflow-hidden bg-black">
+      <section className="relative w-full h-[600px] overflow-hidden bg-black group">
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent z-10" />
         
         {/* Background Image Slider */}
@@ -136,9 +133,10 @@ export default function HomePage() {
         {/* Hero Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center z-20">
           <motion.div 
+            key={`content-${heroIndex}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="max-w-2xl space-y-6"
           >
             <span className="text-cyan-accent text-sm font-bold uppercase tracking-widest flex items-center gap-1.5">
@@ -167,14 +165,32 @@ export default function HomePage() {
             </div>
           </motion.div>
 
+          {/* Left & Right Pagination Arrows */}
+          <div className="absolute inset-y-0 left-4 right-4 flex items-center justify-between pointer-events-none z-30">
+            <button
+              onClick={prevHero}
+              className="pointer-events-auto h-11 w-11 rounded-full bg-black/40 hover:bg-cyan-accent/20 border border-white/10 hover:border-cyan-accent/50 text-white flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
+              aria-label="Previous Slide"
+            >
+              <ChevronLeft className="h-6 w-6 text-white hover:text-cyan-accent" />
+            </button>
+            <button
+              onClick={nextHero}
+              className="pointer-events-auto h-11 w-11 rounded-full bg-black/40 hover:bg-cyan-accent/20 border border-white/10 hover:border-cyan-accent/50 text-white flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
+              aria-label="Next Slide"
+            >
+              <ChevronRight className="h-6 w-6 text-white hover:text-cyan-accent" />
+            </button>
+          </div>
+
           {/* Slider Indicators */}
-          <div className="absolute bottom-8 left-4 sm:left-8 flex gap-2">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 flex gap-2 z-30">
             {HERO_SLIDES.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setHeroIndex(idx)}
-                className={`h-2.5 rounded-full transition-all ${
-                  heroIndex === idx ? 'w-8 bg-cyan-accent' : 'w-2.5 bg-gray-600'
+                className={`h-2.5 rounded-full transition-all cursor-pointer ${
+                  heroIndex === idx ? 'w-8 bg-cyan-accent' : 'w-2.5 bg-gray-600 hover:bg-gray-400'
                 }`}
               />
             ))}
@@ -219,14 +235,12 @@ export default function HomePage() {
               whileHover={{ y: -6 }}
               className="group relative h-[360px] rounded-xl overflow-hidden border border-premium-border bg-[#101625] flex flex-col justify-end p-6 shadow-md"
             >
-              {/* Blur backdrop image */}
               <div 
                 className="absolute inset-0 bg-cover bg-center opacity-45 group-hover:scale-105 group-hover:opacity-60 transition-all duration-500"
                 style={{ backgroundImage: `url(${cat.bg})` }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-[#0b0f19]/70 to-transparent z-10" />
               
-              {/* Content */}
               <div className="relative z-20 space-y-3">
                 <span className="inline-block px-2.5 py-1 rounded bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-bold uppercase tracking-wider">
                   {cat.age}
@@ -250,14 +264,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. DYNAMIC AI RECOMMENDATIONS (Agentic AI Features) */}
+      {/* 3. DYNAMIC AI RECOMMENDATIONS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-b from-[#111827] to-[#0a0d16] border border-premium-border rounded-2xl p-8 md:p-12 relative overflow-hidden shadow-xl shadow-cyan-accent/5">
-          {/* Decorative glow */}
           <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-cyan-accent/5 blur-3xl" />
           
           <div className="flex flex-col lg:flex-row gap-10 items-start">
-            {/* Left intro panel */}
             <div className="lg:w-1/3 space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="h-4 w-4 animate-spin-slow" />
@@ -291,7 +303,6 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Right recommendations cards */}
             <div className="lg:w-2/3 w-full">
               {aiLoading ? (
                 <div className="grid grid-cols-2 gap-4">
@@ -345,7 +356,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. TRENDING STYLES (Feature Showcase) */}
+      {/* 4. TRENDING STYLES */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
           <div className="space-y-3">
@@ -461,7 +472,6 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           
-          {/* FAQ panel */}
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-bold tracking-tight">Common Style Questions</h2>
@@ -503,7 +513,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Newsletter Panel */}
           <div className="bg-card border border-premium-border rounded-2xl p-8 md:p-10 space-y-6">
             <div className="space-y-3">
               <h3 className="text-xl font-bold text-white flex items-center gap-2">

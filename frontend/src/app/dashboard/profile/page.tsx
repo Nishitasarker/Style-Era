@@ -6,7 +6,7 @@ import { api } from '../../../utils/api';
 import { Loader2, CheckCircle2, User as UserIcon, Image as ImageIcon } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [username, setUsername] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,10 +27,15 @@ export default function ProfilePage() {
     setSuccessMessage('');
 
     try {
-      // ব্যাকএন্ডে প্রোফাইল আপডেট রিকোয়েস্ট (আপনার এপিআই অনুযায়ী রাউট দিন)
-      // উদাহরণস্বরূপ: await api.updateProfile({ username, avatarUrl });
+      const response = await api.put('/users/profile', { username, avatarUrl });
       
-      setSuccessMessage('Profile updated successfully! Please refresh to see changes.');
+      if (response.success || response) {
+        setSuccessMessage('Profile updated successfully!');
+        
+        if (setUser && user) {
+          setUser({ ...user, username, avatarUrl });
+        }
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to update profile.');
     } finally {
