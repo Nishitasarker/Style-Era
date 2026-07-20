@@ -78,8 +78,7 @@ export default function Navbar() {
             {isAuthenticated && user ? (
               <div className="relative" ref={dropdownRef}>
                 <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-2 bg-white/5 border border-border-premium px-3 py-1.5 rounded-xl hover:bg-white/10 transition-all">
-                  <img src={user.image || user.avatarUrl || `https://ui-avatars.com/api/?name=${user.name || user.username || 'User'}`} alt="Avatar" className="h-7 w-7 rounded-full border border-cyan-accent/50" />
-                  <span className="text-sm font-semibold text-white hidden sm:inline">{user.name || user.username}</span>
+                  <img src={user.avatarUrl || `https://ui-avatars.com/api/?name=${user.name || user.username || 'User'}`} alt="Avatar" className="h-7 w-7 rounded-full border border-cyan-accent/50" />                  <span className="text-sm font-semibold text-white hidden sm:inline">{user.name || user.username}</span>
                   <ChevronDown className={`h-4 w-4 text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
 
