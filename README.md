@@ -1,75 +1,81 @@
-# React + TypeScript + Vite
+# Style Era - Full-Stack Fashion & AI Style Assistant
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Style Era** is a modern full-stack web application designed to provide personalized fashion recommendations, AI-powered styling advice, and interactive clothing management across different user preferences.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🌐 Live Deployments
+Live Frontend: Style Era (Vercel)
 
-## React Compiler
+Live Backend API: Style Era API (Render)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features & Functionalities
 
-## Expanding the ESLint configuration
+* **User Authentication:** Secure registration and login system with token-based authentication and Google OAuth support.
+* **Fashion Catalog Management:** Browse, filter, and manage trendy fashion collections and clothing items.
+* **AI Style Advisor:** Integrated AI-powered assistant to provide personalized outfit suggestions and styling advice.
+* **Responsive Dashboard:** Fully responsive user interface optimized for seamless mobile and desktop experiences.
+* **Health Check & Mock Fallback:** Robust backend error-handling with built-in database status tracking.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tech Stack & Frameworks
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Here are the core technologies and frameworks used to build this project:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+<p>
+  <img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge" alt="Express.js" />
+  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+</p>
 
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📂 Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```text
+style-era/
+├── frontend/             # Next.js Frontend Application (Vercel)
+│   ├── src/
+│   │   ├── app/          # App Router & Pages
+│   │   ├── components/   # Reusable UI components
+│   │   └── lib/          # API helpers and utilities
+│   └── package.json
+│
+└── backend/              # Express.js Backend Application (Render)
+    ├── src/
+    │   ├── config/       # Database & Store configurations
+    │   ├── models/       # Mongoose Schemas & Data Models
+    │   ├── routes/       # API Endpoints (Auth, Items, AI)
+    │   └── server.ts     # Main server entry point
+    └── package.json
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 
-```
+⚙️ Environment Variables Note
+Security Notice: For security reasons, actual .env credentials and API keys are not displayed in this repository.
+
+To run this project locally, you need to create your own .env files in both the frontend and backend folders using local placeholders (e.g., PORT, MONGODB_URI, JWT_SECRET, NEXT_PUBLIC_API_BASE_URL).
+
+ How to Run Locally
+
+1. Clone the Repository
+git clone [https://github.com/Nishitasarker/Style-Era.git](https://github.com/Nishitasarker/Style-Era.git)
+cd Style-Era
+
+2. Setup Backend
+cd backend
+npm install
+# Create a .env file with your local configurations (Port, MongoDB URI, etc.)
+npm run dev
+
+3. Setup Frontend
+# Open a new terminal
+cd frontend
+npm install
+# Create a .env.local file with your frontend environment variables
+npm run dev
+
