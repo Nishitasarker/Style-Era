@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api, Item } from '../../utils/api';
+import { api, Item } from '../utils/api';
 import { X, Sparkles, Loader2 } from 'lucide-react';
 
 interface EditItemModalProps {
