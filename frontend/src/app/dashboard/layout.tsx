@@ -11,7 +11,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // নেভবার থেকে Add Item এবং Manage Items বাদ দেওয়া হয়েছে
   const navItems = [
     { name: 'Overview', path: '/dashboard', icon: LayoutDashboard },
     { name: 'My Products', path: '/dashboard/my-products', icon: Package },
@@ -19,7 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div className="min-h-screen bg-[#050a18] text-white flex flex-col">
+    <div className="min-h-screen bg-[#050a18] text-white flex flex-col w-full">
       {/* Mobile Top Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-[#050a18]/90 backdrop-blur-md border-b border-border-premium px-4 flex items-center justify-between z-50">
         <Link href="/" className="flex items-center gap-2">
@@ -38,15 +37,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </button>
       </div>
 
-      <div className="flex flex-1 relative">
-        {/* Sidebar (Desktop & Mobile Drawer) - h-screen এবং sticky করা হয়েছে যাতে ফুটারের উপর ওভারল্যাপ না করে */}
-        <aside className={`
-          fixed top-0 bottom-0 left-0 z-40 w-64 border-r border-border-premium bg-card p-6 flex flex-col justify-between
+      <div className="flex flex-1 relative w-full">
+            <aside className={`
+          fixed top-0 left-0 z-40 w-64 h-full border-r border-border-premium bg-[#050a18] p-6 flex flex-col justify-between
           transform transition-transform duration-300 ease-in-out md:translate-x-0
-          ${isMobileMenuOpen ? 'translate-x-0 pt-20 md:pt-6' : '-translate-x-full'}
+          ${isMobileMenuOpen ? 'translate-x-0 pt-20' : '-translate-x-full'}
         `}>
           <div className="space-y-6">
-            {/* লোগো ও ব্র্যান্ড নেম */}
             <div className="flex items-center gap-2 px-2 group">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-accent/10 border border-cyan-accent/30">
                 <Sparkles className="h-5 w-5 text-cyan-accent" />
@@ -56,7 +53,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </span>
             </div>
 
-            {/* মেইন নেভিগেশন লিংকস */}
             <nav className="space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -83,8 +79,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </nav>
           </div>
 
-          {/* নিচের অংশ: Browse to Home এবং Logout বাটন */}
-          <div className="space-y-2 pt-4 border-t border-border-premium">
+          <div className="space-y-2 pt-4 border-t border-border-premium mb-12 md:mb-4">
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -103,7 +98,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </aside>
 
-       
         {isMobileMenuOpen && (
           <div 
             onClick={() => setIsMobileMenuOpen(false)} 
@@ -111,8 +105,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           />
         )}
 
-               <main className="flex-1 p-6 md:p-10 mt-16 md:mt-0 md:ml-64 flex flex-col justify-between min-h-screen">
-          <div className="w-full">
+        {/* Main Content Area - সাইডবারের জন্য বামে মার্জিন এবং নিচে পর্যাপ্ত স্পেস রাখা হয়েছে যাতে ফুটার ফুল দেখা যায় */}
+        <main className="flex-1 p-6 md:p-10 mt-16 md:mt-0 md:ml-64 flex flex-col justify-between">
+          <div className="w-full mb-16">
             {children}
           </div>
         </main>
