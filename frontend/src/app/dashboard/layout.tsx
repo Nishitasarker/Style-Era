@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div className="min-h-screen bg-[#050a18] text-white flex flex-col w-full">
+    <div className="min-h-screen bg-[#050a18] text-white flex flex-col w-full relative">
       {/* Mobile Top Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-[#050a18]/90 backdrop-blur-md border-b border-border-premium px-4 flex items-center justify-between z-50">
         <Link href="/" className="flex items-center gap-2">
@@ -38,8 +38,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       <div className="flex flex-1 relative w-full">
-            <aside className={`
-          fixed top-0 left-0 z-40 w-64 h-full border-r border-border-premium bg-[#050a18] p-6 flex flex-col justify-between
+        {/* Sidebar - absolute ব্যবহার করা হয়েছে যাতে কন্টেন্টের সাথে ওপর-নিচ স্ক্রোল হয় */}
+        <aside className={`
+          absolute top-0 left-0 z-40 w-64 h-full border-r border-border-premium bg-[#050a18] p-6 flex flex-col justify-between
           transform transition-transform duration-300 ease-in-out md:translate-x-0
           ${isMobileMenuOpen ? 'translate-x-0 pt-20' : '-translate-x-full'}
         `}>
@@ -105,9 +106,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           />
         )}
 
-        {/* Main Content Area - সাইডবারের জন্য বামে মার্জিন এবং নিচে পর্যাপ্ত স্পেস রাখা হয়েছে যাতে ফুটার ফুল দেখা যায় */}
-        <main className="flex-1 p-6 md:p-10 mt-16 md:mt-0 md:ml-64 flex flex-col justify-between">
-          <div className="w-full mb-16">
+        {/* Main Content Area */}
+        <main className="flex-1 p-6 md:p-10 mt-16 md:mt-0 md:ml-64 flex flex-col justify-between pb-32">
+          <div className="w-full">
             {children}
           </div>
         </main>

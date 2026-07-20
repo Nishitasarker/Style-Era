@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../../utils/api';
 import { Shirt, Plus, Sparkles, AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 export default function AddItemPage() {
   const router = useRouter();
@@ -34,12 +35,15 @@ export default function AddItemPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['exploreItems'] });
       setSuccess(true);
+      toast.success('Garment added to your wardrobe successfully!');
       setTimeout(() => {
         router.push('/items/manage');
       }, 1500);
     },
     onError: (err: any) => {
-      setError(err.message || 'Failed to upload wardrobe garment.');
+      const msg = err.message || 'Failed to upload wardrobe garment.';
+      setError(msg);
+      toast.error(msg);
     }
   });
 
@@ -49,12 +53,14 @@ export default function AddItemPage() {
     
     if (!name || !description || !category || !price || !imageUrl) {
       setError('Please fill in all required inputs.');
+      toast.warning('Please fill in all required inputs.');
       return;
     }
 
     const priceNum = Number(price);
     if (isNaN(priceNum) || priceNum <= 0) {
       setError('Please provide a valid positive price.');
+      toast.warning('Please provide a valid positive price.');
       return;
     }
 
