@@ -39,8 +39,6 @@ export interface AIRecommendationResponse {
   reasonings: Record<string, string>;
 }
 
-// utils/api.ts এ যোগ করুন
-
 // Client fetch helper
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('style_era_token') : null;
@@ -78,6 +76,12 @@ export const api = {
   
   getCurrentUser: () => request<{ user: User }>('/auth/me'),
 
+  // Generic PUT method for profile or other updates
+  put: (endpoint: string, body: any) => request<any>(endpoint, {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  }),
+
   // Items API
   getItems: (params?: { category?: string; search?: string }) => {
     let url = '/items';
@@ -104,7 +108,7 @@ export const api = {
     method: 'DELETE'
   }),
 
-getMyItems: () => request<Item[]>('/items/my-items'),
+  getMyItems: () => request<Item[]>('/items/my-items'),
 
   // AI API
   getStyleAdvice: (message: string, history: any[] = []) => request<AIAdviceResponse>('/ai/advisor', {
