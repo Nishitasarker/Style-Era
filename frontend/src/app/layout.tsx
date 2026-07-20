@@ -8,7 +8,7 @@ import ReactQueryProvider from '../providers/ReactQueryProvider';
 
 import { AuthProvider } from '../providers/AuthProvider';
 
-import Navbar from '../components/Navbar';
+import ConditionalNavbar from '../components/ConditionalNavbar';
 
 import Footer from '../components/Footer';
 import { ToastContainer } from 'react-toastify';
@@ -74,7 +74,7 @@ export default function RootLayout({
 
           <AuthProvider>
 
-            <Navbar />
+            <ConditionalNavbar />
 
             <main className="flex-grow flex flex-col">
 
