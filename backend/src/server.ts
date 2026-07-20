@@ -7,6 +7,7 @@ import { Item } from './models/Item';
 import authRoutes from './routes/auth';
 import itemRoutes from './routes/items';
 import aiRoutes from './routes/ai';
+import userRoutes from './routes/users'; 
 
 dotenv.config();
 
@@ -14,7 +15,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-// backend/src/server.ts
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',') : ["https://style-era-nine.vercel.app"],  credentials: true
 }));
@@ -24,6 +24,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api', userRoutes); 
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -43,7 +44,6 @@ async function seedDatabase() {
     if (count === 0) {
       console.log('MongoDB catalog is empty. Seeding initial premium collections...');
       
-      // Map mock items to models (strip the mock IDs to let Mongoose generate real ObjectIds)
       const seedItems = itemsMockStore.map(({ _id, ...rest }) => rest);
       await Item.insertMany(seedItems);
       console.log('Successfully seeded database with premium collections.');
@@ -57,10 +57,7 @@ async function seedDatabase() {
 
 // Start Server
 async function startServer() {
-  // Connect to DB
   await connectDB();
-  
-  // Seed Database if connected
   await seedDatabase();
 
   app.listen(PORT, () => {
