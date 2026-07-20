@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Sparkles, Mail, Shield, Globe, MessageCircle } from 'lucide-react';
-import { FaLinkedin, FaFacebook } from 'react-icons/fa'; // সোশ্যাল আইকনগুলোর জন্য (যদি রিয়্যাক্ট আইকন ইনস্টল করা থাকে)
+import { FaLinkedin, FaFacebook } from 'react-icons/fa'; 
 
 export default function Footer() {
   return (

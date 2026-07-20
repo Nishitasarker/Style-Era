@@ -27,7 +27,7 @@ export default function EditItemModal({ item, isOpen, onClose }: EditItemModalPr
 
   const [error, setError] = useState('');
 
-  // আইটেম সিলেক্ট হলে স্টেট ফিলআপ করে নেওয়া
+  
   useEffect(() => {
     if (item) {
       setName(item.name || '');

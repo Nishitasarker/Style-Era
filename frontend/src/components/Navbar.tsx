@@ -17,7 +17,13 @@ export default function Navbar() {
 
   const isActive = (path: string) => pathname === path;
 
-  // বাইরে ক্লিক করলে ড্রপডাউন ও মোবাইল মেনু বন্ধ হবে
+  
+  const isDashboard = pathname?.startsWith('/dashboard');
+  if (isDashboard) {
+    return null;
+  }
+
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -31,7 +37,7 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // পেজ চেঞ্জ হলে মোবাইল মেনু অটো বন্ধ হয়ে যাবে
+ 
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsOpen(false);
