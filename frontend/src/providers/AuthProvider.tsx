@@ -7,6 +7,7 @@ import { api, User } from '../utils/api';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>; // এটি যোগ করা হয়েছে
   login: (credentials: any) => Promise<void>;
   register: (userData: any) => Promise<void>;
   logout: () => void;
@@ -50,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await api.login(credentials);
       localStorage.setItem('style_era_token', data.token);
       setUser(data.user);
-      setLoading(false); // <-- এখানে ফিক্স করা হয়েছে
+      setLoading(false);
       router.push('/');
     } catch (err) {
       setLoading(false);
@@ -64,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await api.register(userData);
       localStorage.setItem('style_era_token', data.token);
       setUser(data.user);
-      setLoading(false); // <-- এখানে ফিক্স করা হয়েছে
+      setLoading(false);
       router.push('/');
     } catch (err) {
       setLoading(false);
@@ -81,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, loading, setUser, login, register, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
