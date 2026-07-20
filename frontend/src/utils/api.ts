@@ -104,11 +104,7 @@ export const api = {
     method: 'DELETE'
   }),
 
-  getMyItems: async () => {
-  const response = await axiosInstance.get('/api/items/my-items'); // ব্যাকএন্ডে এই রাউটটি তৈরি করতে হবে
-  return response.data;
-},
-
+getMyItems: () => request<Item[]>('/items/my-items'),
 
   // AI API
   getStyleAdvice: (message: string, history: any[] = []) => request<AIAdviceResponse>('/ai/advisor', {
