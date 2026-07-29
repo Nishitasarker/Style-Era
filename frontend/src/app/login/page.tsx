@@ -57,12 +57,12 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/", 
-    });
-  };
+  // const handleGoogleLogin = async () => {
+  //   await authClient.signIn.social({
+  //     provider: "google",
+  //     callbackURL: "/", 
+  //   });
+  // };
 
   return (
     <div className="flex-grow flex items-center justify-center px-4 py-16 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#131b2e] via-[#000000] to-[#000000]">
@@ -140,7 +140,7 @@ export default function LoginPage() {
             {isLogin ? "Don't have an account? Register" : 'Already have an account? Log in'}
           </button>
 
-          <div className="text-center mt-3 pt-3 border-t border-gray-800">
+          {/* <div className="text-center mt-3 pt-3 border-t border-gray-800">
             <button
               type="button"
               onClick={handleGoogleLogin}
@@ -148,7 +148,7 @@ export default function LoginPage() {
             >
               <FcGoogle className="h-4 w-4" /> Continue with Google
             </button>
-          </div>
+          </div> */}
         </motion.div>
       </div>
     </div>

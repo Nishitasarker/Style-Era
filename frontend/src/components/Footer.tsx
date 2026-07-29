@@ -2,10 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Sparkles, Mail, Shield, Globe, MessageCircle } from 'lucide-react';
 import { FaLinkedin, FaFacebook } from 'react-icons/fa'; 
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // যদি রাউট /dashboard বা এর কোনো সাব-রাউট হয়, তবে Footer হাইড থাকবে
+  if (pathname?.startsWith('/dashboard')) {
+    return null;
+  }
+
   return (
     <footer className="w-full bg-[#0a0d16] border-t border-border-premium mt-auto">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
